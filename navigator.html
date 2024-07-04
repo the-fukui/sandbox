@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>camera</title>
+</head>
+
+<body>
+    <pre id="root"></pre>
+    <script type="text/javascript">
+        'use strict';
+
+        // ----------------------------------------------------------------
+        // ----------------------------------------------------------------
+        // ----------------------------------------------------------------
+
+        // 指定のオブジェクトの中身を再帰的に取得する
+        function getNestedObject(obj, visited = new Set()) {
+            let result = {};
+
+            // Check if the object is already visited to avoid circular references
+            if (visited.has(obj)) {
+                return result;
+            }
+
+            // Add the object to the visited set
+            visited.add(obj);
+
+            for (let key in obj) {
+                if (typeof obj[key] === 'object' && obj[key] !== null) {
+                    result[key] = getNestedObject(obj[key], visited);
+                } else if (typeof obj[key] === "function") {
+                    result[key] = obj[key].name + "()";
+                } else {
+                    result[key] = obj[key];
+                }
+            }
+
+            return result;
+        }
+
+        document.addEventListener('DOMContentLoaded', async (event) => {
+            document.getElementById('root').innerHTML = JSON.stringify(getNestedObject(navigator), null, 4);
+        });
+
+        // ----------------------------------------------------------------
+        // ----------------------------------------------------------------
+        // ----------------------------------------------------------------
+    </script>
+</body>
+
+</html>
