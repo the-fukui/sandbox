@@ -17,7 +17,7 @@
             height: 50%;
             background-color: #e0f7fa;
             touch-action: none;
-            /* 追加 */
+            /* デフォルトのタッチ操作を無効化 */
         }
 
         #logArea {
@@ -48,11 +48,20 @@
         // タッチが開始されたかどうかを追跡
         let isTouching = false;
 
+        // イベントカウントと時間計測用の変数
+        let eventCount = 0;
+        let startTime = 0;
+        let endTime = 0;
+
         // タッチ開始イベント
         touchArea.addEventListener('pointerdown', function (event) {
             isTouching = true;
             event.preventDefault();
             log('タッチ開始');
+
+            // カウントと時間をリセット
+            eventCount = 0;
+            startTime = Date.now();
         });
 
         // タッチ移動イベント（圧力、幅、高さの変化を検知）
@@ -63,6 +72,8 @@
                 const width = event.width;
                 const height = event.height;
 
+                eventCount++; // イベントカウントを増やす
+
                 log(`圧力: ${pressure.toFixed(3)}, 幅: ${width}, 高さ: ${height}`);
             }
         });
@@ -71,7 +82,18 @@
         touchArea.addEventListener('pointerup', function (event) {
             isTouching = false;
             event.preventDefault();
+            endTime = Date.now();
+
+            // タッチ継続時間を計算（秒単位）
+            const duration = (endTime - startTime) / 1000;
+
+            // イベント発生頻度を計算
+            const eventsPerSecond = eventCount / duration;
+
             log('タッチ終了');
+            log(`タッチ継続時間: ${duration.toFixed(3)} 秒`);
+            log(`イベント数: ${eventCount}`);
+            log(`イベント頻度: ${eventsPerSecond.toFixed(2)} イベント/秒`);
         });
 
         // ログを表示する関数
