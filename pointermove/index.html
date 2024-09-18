@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>タッチ圧力デモ</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        #touchArea {
+            width: 100%;
+            height: 50%;
+            background-color: #e0f7fa;
+            touch-action: none;
+            /* 追加 */
+        }
+
+        #logArea {
+            width: 100%;
+            height: 50%;
+            background-color: #ffffff;
+            overflow-y: auto;
+            padding: 10px;
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+
+        .logEntry {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="touchArea"></div>
+    <div id="logArea"></div>
+
+    <script>
+        const touchArea = document.getElementById('touchArea');
+        const logArea = document.getElementById('logArea');
+
+        // タッチが開始されたかどうかを追跡
+        let isTouching = false;
+
+        // タッチ開始イベント
+        touchArea.addEventListener('pointerdown', function (event) {
+            isTouching = true;
+            event.preventDefault();
+            log('タッチ開始');
+        });
+
+        // タッチ移動イベント（圧力、幅、高さの変化を検知）
+        touchArea.addEventListener('pointermove', function (event) {
+            if (isTouching) {
+                event.preventDefault();
+                const pressure = event.pressure;
+                const width = event.width;
+                const height = event.height;
+
+                log(`圧力: ${pressure.toFixed(3)}, 幅: ${width}, 高さ: ${height}`);
+            }
+        });
+
+        // タッチ終了イベント
+        touchArea.addEventListener('pointerup', function (event) {
+            isTouching = false;
+            event.preventDefault();
+            log('タッチ終了');
+        });
+
+        // ログを表示する関数
+        function log(message) {
+            const p = document.createElement('p');
+            p.textContent = message;
+            p.className = 'logEntry';
+            logArea.appendChild(p);
+            // スクロールを最新のログに合わせる
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+    </script>
+
+</body>
+
+</html>
