@@ -71,10 +71,12 @@
                 const pressure = event.pressure;
                 const width = event.width;
                 const height = event.height;
+                const id = event.pointerId;
+                const type = event.pointerType;
 
                 eventCount++; // イベントカウントを増やす
 
-                log(`圧力: ${pressure.toFixed(3)}, 幅: ${width}, 高さ: ${height}`);
+                log(`ID:${id}, タイプ:${type}, 圧力: ${pressure.toFixed(3)}, 幅: ${width}, 高さ: ${height}`);
             }
         });
 
